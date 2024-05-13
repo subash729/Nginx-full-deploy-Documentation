@@ -233,11 +233,11 @@ click on icon to join the the group of respective platform
 
 <div align="left">
   <a href="https://t.me/jiwanbhattarai" style="text-align: center;">
-  <img src="https://img.shields.io/badge/WhatsApp%20Group%20Members-102-brightgreen?logo=whatsapp&style=for-the-badge"  hspace="120"> 
+  <img src="https://img.shields.io/badge/WhatsApp%20Group%20Members-102-brightgreen?logo=whatsapp&style=for-the-badge"  hspace="80"> 
   </a>
 
   <a href="https://t.me/jiwanbhattarai" style="text-align: center;">
-    <img hspace="20" src="https://img.shields.io/badge/Telegram%20Group%20Members-445-blue?logo=telegram&style=for-the-badge">
+    <img src="https://img.shields.io/badge/Telegram%20Group%20Members-445-blue?logo=telegram&style=for-the-badge">
   </a>
 </div>
 
