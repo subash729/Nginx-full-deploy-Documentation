@@ -224,10 +224,10 @@ In addition to our security focus, we excel in DevOps practices, specializing in
 click on icon to join the the group of respective platform
 <p align="center" width="100%">
   <a href="https://t.me/jiwanbhattarai" style="text-align: center;">
-    <img width="35%" src="screenshots/template-image/whatsapp-logo.png" alt="Learning Updates" height="300" style="margin-right: 100px;" hspace="30" >
+    <img width="30%" src="screenshots/template-image/whatsapp-logo.png" alt="Learning Updates" height="300" style="margin-right: 100px;" hspace="30" >
   </a>
    <a href="https://t.me/jiwanbhattarai" style="text-align: center;">
-    <img width="45%" src="screenshots/template-image/telegram-logo.png" alt="Jiwan Bhattarai Official" height="300" hspace="30" >
+    <img width="40%" src="screenshots/template-image/telegram-logo.png" alt="Jiwan Bhattarai Official" height="300" >
   </a>
 </div>
 
