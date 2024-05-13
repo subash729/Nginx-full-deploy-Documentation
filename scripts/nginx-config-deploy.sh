@@ -77,6 +77,23 @@ detect_input_values() {
     print_success "Input values detected: Server Name: $server_name, Port: $port"
 }
 
+directory_define() {
+    frontend_root_dir=$root_base_dir/$server_name/frontend
+    backend_root_dir=$root_base_dir/$server_name/backend
+
+    frontend_log_dir=$log_base_dir/$server_name/frontend
+    backend_log_dir=$log_base_dir/$server_name/backend
+
+    nginx_etc_config_dir=$nginx_config_base_dir/$server_name
+
+    html_frontend_destination="$root_base_dir/$server_name/frontend/"
+    html_backend_destination="$root_base_dir/$server_name/backend/"
+
+    #Nginx config variable
+    nginx_pre_config_dir="$HOME/nginx/$server_name"
+    nginx_pre_config_file="$nginx_pre_config_dir/$server_name.frontend.conf"
+}
+
 create_directories() {
     print_separator
     print_header "DIRECTORY CREATION"
@@ -297,26 +314,13 @@ display_details() {
 main() {
     detect_input_values "$@"
 
-    # Local Variable
-    frontend_root_dir=$root_base_dir/$server_name/frontend
-    backend_root_dir=$root_base_dir/$server_name/backend
-
-    frontend_log_dir=$log_base_dir/$server_name/frontend
-    backend_log_dir=$log_base_dir/$server_name/backend
-
-    nginx_etc_config_dir=$nginx_config_base_dir/$server_name
-
-    html_frontend_destination="$root_base_dir/$server_name/frontend/"
-    html_backend_destination="$root_base_dir/$server_name/backend/"
-
-    #Nginx config variable
-    nginx_pre_config_dir="$HOME/nginx/$server_name"
-    nginx_pre_config_file="$nginx_pre_config_dir/$server_name.frontend.conf"
-
+    directory_define
     create_directories
+
     generate_nginx_config
     copy_html_site
     copy_restart_nginx_config
+    
     display_details
     unset server_name port root_base_dir log_base_dir nginx_config_base_dir config_dir site_config_dir config_file config
 }
