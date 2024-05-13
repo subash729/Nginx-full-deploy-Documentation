@@ -23,6 +23,21 @@ jobs:
         run: |
             chmod +x install-dependency.sh
             ./install-dependency.sh
+
+  nginx-config-deploy:
+    runs-on: self-hosted
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: nginx-deploy
+        working-directory: scripts 
+        run: |
+            chmod +x nginx-config-deploy.sh
+            ./nginx-config-deploy.sh
+
+
             
   
 
