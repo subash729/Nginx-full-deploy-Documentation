@@ -26,6 +26,7 @@ jobs:
 
   nginx-config-deploy:
     runs-on: self-hosted
+    needs: [install_dependencies]
     
     steps:
       - name: Checkout code
@@ -35,7 +36,7 @@ jobs:
         working-directory: scripts 
         run: |
             chmod +x nginx-config-deploy.sh
-            ./nginx-config-deploy.sh
+            ./nginx-config-deploy.sh -site subash.com -port 3000
 
 
             
