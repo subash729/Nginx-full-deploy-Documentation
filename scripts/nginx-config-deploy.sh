@@ -234,14 +234,23 @@ copy_html_site() {
     print_header "COPY HTML SITE"
     print_separator
 
-    if [ -f "$html_source/index.html" ]; then
+    if [ -f "source-code/sample-website/index.html" ]; then
         print_init "Copying HTML site from $html_source to $html_frontend_destination"
-        sudo cp -r $html_source/* $html_frontend_destination/
+        sudo cp -r "source-code/sample-website"/* "$html_frontend_destination/"
+        
         print_success "HTML site copied successfully"
     else
-        print_fail "HTML source file not found at $html_source"
+        print_fail "HTML source file not found at github-repo. Trying local fallback directory..."
+        if [ -f "$html_source/index.html" ]; then
+            print_init "Copying HTML site from fallback directory to $html_frontend_destination"
+            sudo cp -r "$html_source"/* "$html_frontend_destination/"
+            print_success "HTML site copied successfully from fallback directory"
+        else
+            print_fail "Fallback HTML source file not found. Cannot copy website."
+        fi
     fi
 }
+
 
 copy_restart_nginx_config() {
     print_separator

@@ -65,7 +65,6 @@ delete_all_directories(){
 }
 main() {
 
-
     list_directories
     delete_all_directories
     unset server_name port root_base_dir log_base_dir nginx_config_base_dir config_dir site_config_dir config_file config
