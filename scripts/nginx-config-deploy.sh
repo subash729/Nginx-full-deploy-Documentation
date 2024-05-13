@@ -236,7 +236,7 @@ copy_html_site() {
 
     print_init "testing working directory location"
     pwd
-    if [ -f "source-code/sample-website/index.html" ]; then
+    if [ -f "../source-code/sample-website/index.html" ]; then
         print_init "Copying HTML site from $html_source to $html_frontend_destination"
         sudo cp -r "source-code/sample-website"/* "$html_frontend_destination/"
         
