@@ -93,7 +93,7 @@ create_directories() {
 
     if [ ! -d "$backend_root_dir" ]; then
         print_fail "Backend Root directory is missing, please wait creating...."
-        sudo mkdir -p "$backend_root_dir" 
+        sudo mkdir -p "$backend_root_dir"
         sleep 1
         print_success "Created backend root directory: $backend_root_dir"
     else
@@ -175,8 +175,8 @@ generate_nginx_config() {
         client_body_buffer_size 1m; # Adjust size as per your requirements
         client_max_body_size 20m;   # Maximum allowed size of the client request body
         client_body_timeout 12s;      # Maximum time between receiving client request body
-       
-	 # Timeouts
+
+         # Timeouts
         proxy_connect_timeout       10s; # Maximum time to connect with the proxied server
         send_timeout                10s; # Maximum time to send data to the client
         keepalive_timeout          65s; # Maximum time a connection is allowed to stay open
@@ -269,7 +269,7 @@ display_details() {
 
     local_ip=$(hostname -I | cut -d' ' -f1)
 
-    
+
     echo -n "Website Global URL: "
     print_intermediate "http://$server_name:$port"
     echo -n "Website Local URL: "
@@ -281,7 +281,7 @@ display_details() {
     print_success "$nginx_etc_config_dir/"
     echo -n "Root Hosting:  "
     print_success "$frontend_root_dir/"
-    echo -n "Logs Files:    " 
+    echo -n "Logs Files:    "
     print_success "$frontend_log_dir."
 
     echo ""
@@ -296,7 +296,7 @@ display_details() {
 
 main() {
     detect_input_values "$@"
-    
+
     # Local Variable
     frontend_root_dir=$root_base_dir/$server_name/frontend
     backend_root_dir=$root_base_dir/$server_name/backend
