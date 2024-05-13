@@ -85,7 +85,7 @@ create_directories() {
     if [ ! -d "$frontend_root_dir" ]; then
         print_fail "Frontend Root directory is missing, please wait creating...."
         sudo mkdir -p "$frontend_root_dir"
-        sleep 2
+        sleep 1
         print_success "Created frontend root directory: $frontend_root_dir"
     else
         print_init "Frontend root directory already exists: $frontend_root_dir"
@@ -94,7 +94,7 @@ create_directories() {
     if [ ! -d "$backend_root_dir" ]; then
         print_fail "Backend Root directory is missing, please wait creating...."
         sudo mkdir -p "$backend_root_dir" 
-        sleep 2
+        sleep 1
         print_success "Created backend root directory: $backend_root_dir"
     else
         print_init "Backend root directory already exists: $backend_root_dir"
@@ -104,7 +104,7 @@ create_directories() {
     # Create log directory for the server - frontend and backend
     if [ ! -d "$frontend_log_dir" ]; then
         print_fail "Frontend Log directory is missing, please wait creating...."
-        sleep 2
+        sleep 1
         sudo mkdir -p "$frontend_log_dir"
         print_success "Created frontend log directory: $frontend_log_dir"
     else
@@ -114,7 +114,7 @@ create_directories() {
     if [ ! -d "$backend_log_dir" ]; then
         print_fail "Backend Log directory is missing, please wait creating...."
         sudo mkdir -p "$backend_log_dir"
-        sleep 2
+        sleep 1
         print_success "Created backend log directory: $backend_log_dir"
     else
         print_init "Backend log directory already exists: $backend_log_dir"
@@ -124,7 +124,7 @@ create_directories() {
     if [ ! -d "$nginx_etc_config_dir" ]; then
         print_fail "Nginx config directory is missing, please wait creating...."
         sudo mkdir -p "$nginx_etc_config_dir"
-        sleep 2
+        sleep 1
         print_success "Created Nginx config directory: $nginx_etc_config_dir"
     else
         print_init "Nginx Config directory already exists: $nginx_etc_config_dir"
@@ -144,12 +144,9 @@ generate_nginx_config() {
 
     print_init "Generating Nginx configuration, please wait..."
     print_separator
-    sleep 2
+    sleep 1
 
     # Generate nginx configuration
-    
-    
-
     config="server {
     listen $port;
     listen [::]:$port;
@@ -157,14 +154,37 @@ generate_nginx_config() {
     server_name $server_name;
 
     root $frontend_root_dir;
+
     index index.html index.htm;
 
-    location /about-us{
-        index index.html;
+    location /about-us {
+    index about-us.html index.html;
+    }
+
+     location /sign-up {
+    index sign-up.html index.html;
     }
 
     location / {
         try_files \$uri \$uri/ =404;
+
+        proxy_buffering on;
+        proxy_buffers 16 4k;
+        proxy_buffer_size 2k;
+
+        client_body_buffer_size 1m; # Adjust size as per your requirements
+        client_max_body_size 20m;   # Maximum allowed size of the client request body
+        client_body_timeout 12s;      # Maximum time between receiving client request body
+       
+	 # Timeouts
+        proxy_connect_timeout       10s; # Maximum time to connect with the proxied server
+        send_timeout                10s; # Maximum time to send data to the client
+        keepalive_timeout          65s; # Maximum time a connection is allowed to stay open
+
+        add_header X-Frame-Options "SAMEORIGIN";
+        add_header X-Content-Type-Options "nosniff";
+        add_header Referrer-Policy "strict-origin-when-cross-origin";
+        expires 1M; # Cache assets for 1 month
     }
 
     location ~* \.(css|js|gif|jpe?g|png)$ {
@@ -183,6 +203,7 @@ generate_nginx_config() {
     access_log $frontend_log_dir/access.log;
     error_log $frontend_log_dir/error.log;
 }"
+
 
     # Create site config directory and save configuration
     mkdir -p $nginx_pre_config_dir
