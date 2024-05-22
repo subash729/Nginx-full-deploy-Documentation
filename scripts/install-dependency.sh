@@ -73,7 +73,7 @@ install_figlet() {
     printf "\nInstalling Figlet\n"
     print_separator
 
-    if grep -q 'Ubuntu' /etc/os-release; then
+    if grep -q 'Ubuntu\|Kali' /etc/os-release; then
         sudo apt-get update
         sudo apt-get install -y figlet
 
@@ -83,7 +83,7 @@ install_figlet() {
             print_fail "Failed to install Figlet"
         fi
 
-    elif grep -qEi 'redhat|centos' /etc/os-release; then
+    elif grep -qEi 'redhat\|centos' /etc/os-release; then
         sudo yum -y install figlet
         if [ $? -eq 0 ]; then
             print_success "Figlet is now installed"
@@ -114,7 +114,7 @@ install_nginx() {
     print_init "$os_description OS is detected on your system."
     print_intermediate "\nInstalling Nginx\n"
     print_separator
-    if grep -q 'Ubuntu' /etc/os-release; then
+    if grep -q 'Ubuntu\|Kali' /etc/os-release; then
         sudo apt-get update
         sudo apt-get install -y nginx
         if [ $? -eq 0 ]; then
@@ -122,7 +122,7 @@ install_nginx() {
         else
             print_fail "Failed to install Nginx"
         fi
-    elif grep -qEi 'redhat|centos' /etc/os-release; then
+    elif grep -qEi 'redhat\|centos' /etc/os-release; then
         sudo yum -y install nginx
         if [ $? -eq 0 ]; then
             print_success "Nginx is now installed"

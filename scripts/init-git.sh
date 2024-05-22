@@ -39,8 +39,8 @@ detect_input_values() {
     print_separator
 
     # Check if all required arguments are provided
-    if [ $# -ne 4 ]; then
-        print_fail "Usage: $0 -u <username> -r <repo-name>"
+    if [ $# -lt 4 ]; then
+        print_fail "Usage: $0 -u <username> -r <repo-name> [-m <email>]"
         exit 1
     fi
 
@@ -55,6 +55,10 @@ detect_input_values() {
                 repo_name="$2"
                 shift 2
                 ;;
+            -m)
+                email="$2"
+                shift 2
+                ;;
             *)
                 print_fail "Unknown option: $1"
                 exit 1
@@ -64,36 +68,60 @@ detect_input_values() {
 
     # Check if required options are provided
     if [ -z "$username" ] || [ -z "$repo_name" ]; then
-        print_fail "Usage: $0 -u <username> -r <repo-name>"
+        print_fail "Usage: $0 -u <username> -r <repo-name> [-m <email>]"
         exit 1
     fi
 
-    print_success "Input values detected: Username: $username, Repo Name: $repo_name"
+    print_success "Input values detected: Username: $username, Repo Name: $repo_name, Email: ${email:-Not provided}"
 }
 
 github-setup() {
-     print_init "Package Installation"
+    print_init "Package Installation"
 
     # Check if gh is installed
-    if ! check_command_installed gh; then
-        print_init "Installing GitHub CLI (gh)"
-        sudo apt update && sudo apt install -y gh || print_fail "Failed to install gh"
+    if command -v gh &>/dev/null; then
+        print_success "gh is already installed"
+    elif grep -q 'Ubuntu' /etc/os-release; then
+        sudo apt-get update
+        sudo apt-get install -y gh
+        if [ $? -eq 0 ]; then
+            print_success "gh is now installed"
+        else
+            print_fail "Failed to install gh"
+            exit 1
+        fi
+    else
+        print_fail "gh is not installed and OS is not Ubuntu"
+        exit 1
     fi
 
     # Check if figlet is installed
-    if ! check_command_installed figlet; then
-        print_init "Installing figlet"
-        sudo apt update && sudo apt install -y figlet || print_fail "Failed to install figlet"
+    if command -v figlet &>/dev/null; then
+        print_success "figlet is already installed"
+    elif grep -q 'Ubuntu' /etc/os-release; then
+        sudo apt-get update
+        sudo apt-get install -y figlet
+        if [ $? -eq 0 ]; then
+            print_success "Figlet is now installed"
+        else
+            print_fail "Failed to install Figlet"
+            exit 1
+        fi
+    else
+        print_fail "figlet is not installed and OS is not Ubuntu"
+        exit 1
     fi
-
+    
     print_success "Required packages installed"
 
     print_init "Github-account-setup"
     print_init "configuring basic setup"
-    git config --global user.name $username
-    git config --global user.mail $username@gmail.com
-
-    
+    git config --global user.name "$username"
+    if [ -n "$email" ]; then
+        git config --global user.email "$email"
+    else
+        print_init "Email not provided. Using default email."
+    fi
 }
 
 github-login-test() {
@@ -105,25 +133,25 @@ github-login-test() {
     ssh -T git@github.com
 }
 
-
-
 github-repo-create() {
     print_init "Creating repository"
-    gh repo create "$repo_name"
-    mkdir -p $repo_name
-    cd $repo_name
-    print_intermediate "Initializing $repo_name repository"
+    print_init "Manually create the repository on GitHub or authenticate with gh"
+    print_init "Initializing $repo_name repository locally"
+    mkdir -p "$repo_name"
+    cd "$repo_name" || exit
     git init
-    sleep 1
     git remote add origin "git@github.com:$username/$repo_name.git"
+    print_success "Repository $repo_name created locally. Please create it on GitHub or authenticate with gh"
 }
 
-git-commit-push(){
-    print_init "Chaning to local repository"
+
+git-commit-push() {
+    print_init "Changing to local repository"
+    echo "Testing" >> README.MD
     git add .
     git commit -m "Initial commit"
     git push -u origin main
-    print_success "Repos pushed sucessfully"
+    print_success "Repos pushed successfully"
 }
 
 main() {
@@ -131,7 +159,7 @@ main() {
 
     github-setup
     github-login-test
-    github-repo-create 
+    github-repo-create
     git-commit-push
 }
 
